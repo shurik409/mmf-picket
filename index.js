@@ -34,6 +34,12 @@ bot.onText(/\/minus (.+)/, (msg, match) => {
     bot.sendMessage(chatId, `QrCode для снятия ${resp} коинов`);
 });
 
+bot.onText(/\/echo (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const resp = match[1]; // the captured "whatever"
+
+    bot.sendMessage(chatId, resp);
+});
 
 // bot.onText(/\/start/, (msg, match) => {
 //     const chatId = msg.chat.id;
