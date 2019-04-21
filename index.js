@@ -12,38 +12,61 @@ require('https').createServer().listen(process.env.PORT || 5001).on('request', f
     res.end('')
 });
 
-bot.onText(/\/start/, (msg, match) => {
-    const chatId = msg.chat.id;
+bot.onText(/\/add (.+)/, (msg, match) => {
+        const chatId = msg.chat.id;
+        const resp = match[1];
     
-    bot.sendMessage(chatId, 'Create balance', {
-        reply_markup: {
-            inline_keyboard : [[
-            {
-                text: 'Add 5',
-                callback_data: 'add 5'
-            },{
-                text: 'Add 10',
-                callback_data: 'add 10'
-            },{
-                text: 'Add 15',
-                callback_data: 'add 15'
-            },{
-                text: 'Minus 5',
-                callback_data: 'minus 5'
-            }
-        ]]
-        }
-    });
+        let qrCode = await mongodbClient.addQrCode(resp, msg.from);
+        console.log(qrCode);
+        var qr_svg = qr.imageSync(`${qrCode.id}`, { type: 'png' });
+        bot.sendPhoto(chatId, qr_svg);
+        bot.sendMessage(chatId, `QrCode для ${resp} коинов`);
 });
 
-bot.on('callback_query', async (msg) => {
-    const chatId = msg.message.chat.id;
-    const data = msg.data;
-    const [type, count] = data.split(' ')
-    console.log(type, count);
-    let qrCode = await mongodbClient.addQrCode(type === 'minus' ? `-${count}` : count, msg.from);
+bot.onText(/\/minus (.+)/, (msg, match) => {
+    const chatId = msg.chat.id;
+    const resp = match[1];
+
+    let qrCode = await mongodbClient.addQrCode(`-${resp}`, msg.from);
     console.log(qrCode);
     var qr_svg = qr.imageSync(`${qrCode.id}`, { type: 'png' });
     bot.sendPhoto(chatId, qr_svg);
-    bot.sendMessage(chatId, `You ${msg.data} coin`);
+    bot.sendMessage(chatId, `QrCode для снятия ${resp} коинов`);
 });
+
+
+// bot.onText(/\/start/, (msg, match) => {
+//     const chatId = msg.chat.id;
+    
+//     bot.sendMessage(chatId, 'Create balance', {
+//         reply_markup: {
+//             inline_keyboard : [[
+//             {
+//                 text: 'Add 5',
+//                 callback_data: 'add 5'
+//             },{
+//                 text: 'Add 10',
+//                 callback_data: 'add 10'
+//             },{
+//                 text: 'Add 15',
+//                 callback_data: 'add 15'
+//             },{
+//                 text: 'Minus 5',
+//                 callback_data: 'minus 5'
+//             }
+//         ]]
+//         }
+//     });
+// });
+
+// bot.on('callback_query', async (msg) => {
+//     const chatId = msg.message.chat.id;
+//     const data = msg.data;
+//     const [type, count] = data.split(' ')
+//     console.log(type, count);
+//     let qrCode = await mongodbClient.addQrCode(type === 'minus' ? `-${count}` : count, msg.from);
+//     console.log(qrCode);
+//     var qr_svg = qr.imageSync(`${qrCode.id}`, { type: 'png' });
+//     bot.sendPhoto(chatId, qr_svg);
+//     bot.sendMessage(chatId, `You ${msg.data} coin`);
+// });
