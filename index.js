@@ -12,7 +12,7 @@ require('https').createServer().listen(process.env.PORT || 5001).on('request', f
     res.end('')
 });
 
-bot.onText(/\/add (.+)/, (msg, match) => {
+bot.onText(/\/add (.+)/, async (msg, match) => {
         const chatId = msg.chat.id;
         const resp = match[1];
     
@@ -23,7 +23,7 @@ bot.onText(/\/add (.+)/, (msg, match) => {
         bot.sendMessage(chatId, `QrCode для ${resp} коинов`);
 });
 
-bot.onText(/\/minus (.+)/, (msg, match) => {
+bot.onText(/\/minus (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1];
 
@@ -34,7 +34,7 @@ bot.onText(/\/minus (.+)/, (msg, match) => {
     bot.sendMessage(chatId, `QrCode для снятия ${resp} коинов`);
 });
 
-bot.onText(/\/echo (.+)/, (msg, match) => {
+bot.onText(/\/echo (.+)/, async (msg, match) => {
     const chatId = msg.chat.id;
     const resp = match[1]; // the captured "whatever"
 
