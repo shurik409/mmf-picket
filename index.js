@@ -41,38 +41,38 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
     bot.sendMessage(chatId, resp);
 });
 
-// bot.onText(/\/start/, (msg, match) => {
-//     const chatId = msg.chat.id;
+bot.onText(/\/start/, (msg, match) => {
+    const chatId = msg.chat.id;
     
-//     bot.sendMessage(chatId, 'Create balance', {
-//         reply_markup: {
-//             inline_keyboard : [[
-//             {
-//                 text: 'Add 5',
-//                 callback_data: 'add 5'
-//             },{
-//                 text: 'Add 10',
-//                 callback_data: 'add 10'
-//             },{
-//                 text: 'Add 15',
-//                 callback_data: 'add 15'
-//             },{
-//                 text: 'Minus 5',
-//                 callback_data: 'minus 5'
-//             }
-//         ]]
-//         }
-//     });
-// });
+    bot.sendMessage(chatId, 'Create balance', {
+        reply_markup: {
+            inline_keyboard : [[
+            {
+                text: 'Add 5',
+                callback_data: 'add 5'
+            },{
+                text: 'Add 10',
+                callback_data: 'add 10'
+            },{
+                text: 'Add 15',
+                callback_data: 'add 15'
+            },{
+                text: 'Minus 5',
+                callback_data: 'minus 5'
+            }
+        ]]
+        }
+    });
+});
 
-// bot.on('callback_query', async (msg) => {
-//     const chatId = msg.message.chat.id;
-//     const data = msg.data;
-//     const [type, count] = data.split(' ')
-//     console.log(type, count);
-//     let qrCode = await mongodbClient.addQrCode(type === 'minus' ? `-${count}` : count, msg.from);
-//     console.log(qrCode);
-//     var qr_svg = qr.imageSync(`${qrCode.id}`, { type: 'png' });
-//     bot.sendPhoto(chatId, qr_svg);
-//     bot.sendMessage(chatId, `You ${msg.data} coin`);
-// });
+bot.on('callback_query', async (msg) => {
+    const chatId = msg.message.chat.id;
+    const data = msg.data;
+    const [type, count] = data.split(' ')
+    console.log(type, count);
+    let qrCode = await mongodbClient.addQrCode(type === 'minus' ? `-${count}` : count, msg.from);
+    console.log(qrCode);
+    var qr_svg = qr.imageSync(`${qrCode.id}`, { type: 'png' });
+    bot.sendPhoto(chatId, qr_svg);
+    bot.sendMessage(chatId, `You ${msg.data} coin`);
+});
